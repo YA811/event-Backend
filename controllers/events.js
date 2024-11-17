@@ -1,5 +1,3 @@
-// CRUD ( Create , Read , Update and delete Events ) using routers 
-
 const express = require('express');
 const verifyToken = require('../middleware/verify-token.js');
 const Event = require('../models/event.js');
