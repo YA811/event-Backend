@@ -4,11 +4,9 @@ const mongoose = require('mongoose');
 const listSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
     },
     invitationStatus:{
         type: String,
-        required: true,
         enum: ['pending', 'accepted', 'rejected']
     }
 });
@@ -24,7 +22,6 @@ const eventSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
         },
     location: {
         type: String,
