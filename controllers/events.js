@@ -17,4 +17,16 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const events = await Event.find({})
+      .populate('planner')
+      .sort({ createdAt: 'desc' });
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
 module.exports = router;
