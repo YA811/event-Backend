@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    password: {
+    hashedPassword: {
         type: String,
         required: true
     },
@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        delete returnedObject.password;
+        delete returnedObject.hashedPassword;
     }
 });
 
