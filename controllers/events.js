@@ -18,10 +18,12 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+
 // INDEX
 router.get('/', async (req, res) => {
   try {
-    const events = await Event.find({})
+    const events = await Event.find({planner: req.user._id})
       .populate('planner')
       .sort({ createdAt: 'desc' });
     res.status(200).json(events);
@@ -34,6 +36,9 @@ router.get('/', async (req, res) => {
 router.get('/:eventId', async (req, res) => {
     try {
         const event = await Event.findById(req.params.eventId).populate('planner')
+         if (!event.planner.equals(req.user._id)) {
+            return res.status(403).send("You're not allowed to do that!")
+        }
         res.status(200).json(event)
     } catch (error) {
         res.status(500).json(error)
@@ -78,7 +83,10 @@ router.delete('/:eventId', async (req, res) => {
 router.post('/:eventId/attendees', async (req, res) => {
     try {
         req.body.planner = req.user._id
-        const event = await Event.findById(req.params.eventId)
+        const event = await Event.findById(req.params.eventId);
+        if (!event.planner.equals(req.user._id)) {
+            return res.status(403).send("You're not allowed to do that!");
+        }
         event.attendees.push(req.body)
         await event.save()
         const newAttendee = event.attendees[event.attendees.length - 1]
@@ -93,6 +101,9 @@ router.post('/:eventId/attendees', async (req, res) => {
 router.put('/:eventId/attendees/:attendeeId', async (req, res) => {
     try {
       const event = await Event.findById(req.params.eventId);
+      if (!event.planner.equals(req.user._id)) {
+        return res.status(403).send("You're not allowed to do that!");
+      }
       const attendee = event.attendees.id(req.params.attendeeId);
       attendee.name = req.body.name;
       attendee.invitationStatus = req.body.invitationStatus;
@@ -108,6 +119,9 @@ router.put('/:eventId/attendees/:attendeeId', async (req, res) => {
 router.delete('/:eventId/attendees/:attendeeId', async (req, res)=>{
     try{
         const event = await Event.findById(req.params.eventId);
+        if (!event.planner.equals(req.user._id)) {
+            return res.status(403).send("You're not allowed to do that!");
+        }
         event.attendees.remove({_id: req.params.attendeeId});
         await event.save();
         res.status(200).json({ message: 'attendee deleted' });
