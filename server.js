@@ -9,6 +9,7 @@ const usersRouter = require('./controllers/users');
 const profilesRouter = require('./controllers/profiles');
 const eventsRouter = require('./controllers/events.js');
 
+const PORT = process.env.PORT || '3000';
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -24,6 +25,6 @@ app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
 app.use('/events', eventsRouter);
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log('The express app is ready!');
 });
